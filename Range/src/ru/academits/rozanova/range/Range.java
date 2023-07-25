@@ -25,15 +25,15 @@ public class Range {
         this.to = to;
     }
 
-    public double getLength(double from, double to) {
-        return to - from;
+    public double getLength() {
+        return this.to - this.from;
     }
 
     public boolean isInside(double number) {
         return number >= from && number <= to;
     }
 
-    public Range[] getTwoIntervalsIntersection(Range range2) {
+    public Range rangeIntersection(Range range2) {
         if (to <= range2.from || from >= range2.to) {
             return null;
         }
@@ -41,10 +41,10 @@ public class Range {
         double newFrom = Math.max(from, range2.from);
         double newTo = Math.min(to, range2.to);
 
-        return new Range[]{new Range(newFrom, newTo)};
+        return new Range(newFrom, newTo);
     }
 
-    public Range[] getTwoIntervalsUnion(Range range2) {
+    public Range[] rangeUnion(Range range2) {
         if (to < range2.from || range2.to < from) {
             return new Range[]{new Range(from, to), new Range(range2.from, range2.to)};
         }
@@ -55,24 +55,23 @@ public class Range {
         return new Range[]{new Range(newFrom, newTo)};
     }
 
-    public Range[] getTwoIntervalsDifference(Range range2) {
-        if (range2.from >= from && range2.to <= to || from >= range2.from && to <= range2.to) {
-            return null;
+    public Range[] rangeDifference(Range range2) {
+        if ((range2.from >= from && range2.to <= to) || (from >= range2.from && to <= range2.to)) {
+            return new Range[]{new Range(0, 0)};
         }
 
-        if (to > range2.from && from < range2.from || range2.to > from && range2.from < from) {
-            double newFrom = Math.min(from, range2.to);
-            double newTo = Math.min(to, range2.from);
-
-            if (newFrom > newTo) {
-                double temp = newFrom;
-                newFrom = newTo;
-                newTo = temp;
-            }
+        if ((to > range2.from && from < range2.from) || (range2.to > from && range2.from < from)) {
+            double newFrom = Math.min(from, range2.from);
+            double newTo = Math.max(from, range2.from);
 
             return new Range[]{new Range(newFrom, newTo)};
         }
 
         return new Range[]{new Range(from, to), new Range(range2.from, range2.to)};
+    }
+
+    @Override
+    public String toString() {
+        return "(" + from + "; " + to + ")";
     }
 }
