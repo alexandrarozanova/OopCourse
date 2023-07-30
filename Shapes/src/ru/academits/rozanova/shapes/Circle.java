@@ -1,10 +1,8 @@
 package ru.academits.rozanova.shapes;
 
-public class Circle implements Shape {
-    private final double radius;
-
-    public Circle(double radius) {
-        this.radius = radius;
+public record Circle(double radius) implements Shape {
+    public double getRadius() {
+        return radius;
     }
 
     @Override
@@ -19,7 +17,7 @@ public class Circle implements Shape {
 
     @Override
     public double getArea() {
-        return Math.pow(radius, 2) * Math.PI;
+        return radius * radius * Math.PI;
     }
 
     @Override
@@ -28,13 +26,8 @@ public class Circle implements Shape {
     }
 
     @Override
-    public int compareTo(Shape shapes) {
-        return (int) (this.getArea() - shapes.getArea());
-    }
-
-    @Override
     public String toString() {
-        return "\"Круг\", с радиусом = " + this.radius;
+        return "\"Круг\", с радиусом = " + getRadius();
     }
 
     @Override
@@ -55,7 +48,7 @@ public class Circle implements Shape {
             return false;
         }
 
-        Circle other = (Circle) o;
-        return radius == other.radius;
+        Circle circle = (Circle) o;
+        return radius == circle.radius;
     }
 }

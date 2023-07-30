@@ -1,10 +1,8 @@
 package ru.academits.rozanova.shapes;
 
-public class Square implements Shape {
-    private final double sideLength;
-
-    public Square(double sideLength) {
-        this.sideLength = sideLength;
+public record Square(double sideLength) implements Shape {
+    public double getSideLength() {
+        return sideLength;
     }
 
     @Override
@@ -28,13 +26,8 @@ public class Square implements Shape {
     }
 
     @Override
-    public int compareTo(Shape shape) {
-        return (int) (this.getArea() - shape.getArea());
-    }
-
-    @Override
     public String toString() {
-        return "\"Квадрат\", со стороной = " + this.sideLength;
+        return "\"Квадрат\", со стороной = " + getSideLength();
     }
 
     @Override
@@ -55,7 +48,7 @@ public class Square implements Shape {
             return false;
         }
 
-        Square other = (Square) o;
-        return sideLength == other.sideLength;
+        Square square = (Square) o;
+        return sideLength == square.sideLength;
     }
 }

@@ -22,13 +22,8 @@ public record Rectangle(double width, double height) implements Shape {
     }
 
     @Override
-    public int compareTo(Shape shapes) {
-        return (int) (this.getArea() - shapes.getArea());
-    }
-
-    @Override
     public String toString() {
-        return "\"Прямоугольник\", со сторонами = " + this.width + ", " + this.height;
+        return "\"Прямоугольник\", со шириной = " + getWidth() + ", высотой = " + getHeight();
     }
 
     @Override
@@ -50,7 +45,7 @@ public record Rectangle(double width, double height) implements Shape {
             return false;
         }
 
-        Rectangle other = (Rectangle) o;
-        return width == other.width && height == other.height;
+        Rectangle rectangle = (Rectangle) o;
+        return width == rectangle.width && height == rectangle.height;
     }
 }
