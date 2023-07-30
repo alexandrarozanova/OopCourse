@@ -42,7 +42,7 @@ public class Main {
             System.out.println("Число " + numberInRange + " не находится в первом диапазоне заданных чисел.");
         }
 
-        Range intersection = range1.rangeIntersection(range2);
+        Range intersection = range1.getIntersection(range2);
 
         if (intersection == null) {
             System.out.println("Пересечения нет.");
@@ -50,10 +50,10 @@ public class Main {
             System.out.println("Диапазон пересечения двух интервалов = " + intersection);
         }
 
-        Range[] union = range1.rangeUnion(range2);
+        Range[] union = range1.getUnion(range2);
         System.out.println("Объединение двух интервалов - " + Arrays.toString(union));
 
-        Range[] difference = range1.rangeDifference(range2);
+        Range[] difference = range1.getDifference(range2);
         System.out.println("Разность двух интервалов - " + Arrays.toString(difference));
     }
 }

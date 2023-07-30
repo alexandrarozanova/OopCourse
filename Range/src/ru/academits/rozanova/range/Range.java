@@ -26,48 +26,49 @@ public class Range {
     }
 
     public double getLength() {
-        return this.to - this.from;
+        return to - from;
     }
 
     public boolean isInside(double number) {
         return number >= from && number <= to;
     }
 
-    public Range rangeIntersection(Range range2) {
-        if (to <= range2.from || from >= range2.to) {
+    public Range getIntersection(Range range) {
+        if (to <= range.from || from >= range.to) {
             return null;
         }
 
-        double newFrom = Math.max(from, range2.from);
-        double newTo = Math.min(to, range2.to);
+        double newFrom = Math.max(from, range.from);
+        double newTo = Math.min(to, range.to);
 
         return new Range(newFrom, newTo);
     }
 
-    public Range[] rangeUnion(Range range2) {
-        if (to < range2.from || range2.to < from) {
-            return new Range[]{new Range(from, to), new Range(range2.from, range2.to)};
+    public Range[] getUnion(Range range) {
+        if (to < range.from || range.to < from) {
+            return new Range[]{new Range(from, to), new Range(range.from, range.to)};
         }
 
-        double newFrom = Math.min(from, range2.from);
-        double newTo = Math.max(to, range2.to);
+        double newFrom = Math.min(from, range.from);
+        double newTo = Math.max(to, range.to);
 
         return new Range[]{new Range(newFrom, newTo)};
     }
 
-    public Range[] rangeDifference(Range range2) {
-        if ((range2.from >= from && range2.to <= to) || (from >= range2.from && to <= range2.to)) {
-            return new Range[]{new Range(0, 0)};
+    public Range[] getDifference(Range range) {
+        if ((from == range.from && range.to < to) || (range.from < from && range.to <= to)) {
+            return new Range[]{new Range(range.to, to)};
         }
 
-        if ((to > range2.from && from < range2.from) || (range2.to > from && range2.from < from)) {
-            double newFrom = Math.min(from, range2.from);
-            double newTo = Math.max(from, range2.from);
-
-            return new Range[]{new Range(newFrom, newTo)};
+        if ((range.from > from && range.to == to) || (range.from > from && range.to > to)) {
+            return new Range[]{new Range(from, range.from)};
         }
 
-        return new Range[]{new Range(from, to), new Range(range2.from, range2.to)};
+        if ((range.from <= from && range.to >= to) || (range.from >= to)) {
+            return new Range[0];
+        }
+
+        return new Range[]{new Range(from, range.from), new Range(range.to, to)};
     }
 
     @Override
