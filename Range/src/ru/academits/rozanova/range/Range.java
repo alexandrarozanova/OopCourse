@@ -56,19 +56,23 @@ public class Range {
     }
 
     public Range[] getDifference(Range range) {
-        if ((from == range.from && range.to < to) || (range.from < from && range.to <= to)) {
+        if (from >= range.to || to <= range.from) {
+            return new Range[]{new Range(from, to)};
+        }
+
+        if (from < range.from && to > range.to) {
+            return new Range[]{new Range(from, range.from), new Range(range.to, to)};
+        }
+
+        if (range.from <= from && range.to >= to) {
+            return new Range[]{};
+        }
+
+        if (range.to < to) {
             return new Range[]{new Range(range.to, to)};
         }
 
-        if ((range.from > from && range.to == to) || (range.from > from && range.to > to)) {
-            return new Range[]{new Range(from, range.from)};
-        }
-
-        if ((range.from <= from && range.to >= to) || (range.from >= to)) {
-            return new Range[0];
-        }
-
-        return new Range[]{new Range(from, range.from), new Range(range.to, to)};
+        return new Range[]{new Range(from, range.from)};
     }
 
     @Override
