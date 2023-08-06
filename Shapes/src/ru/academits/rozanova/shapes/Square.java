@@ -1,10 +1,6 @@
 package ru.academits.rozanova.shapes;
 
 public record Square(double sideLength) implements Shape {
-    public double getSideLength() {
-        return sideLength;
-    }
-
     @Override
     public double getWidth() {
         return sideLength;
@@ -27,7 +23,7 @@ public record Square(double sideLength) implements Shape {
 
     @Override
     public String toString() {
-        return "\"Квадрат\", со стороной = " + getSideLength();
+        return "\"Квадрат\", со стороной = " + sideLength;
     }
 
     @Override

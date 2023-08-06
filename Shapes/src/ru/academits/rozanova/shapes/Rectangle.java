@@ -23,7 +23,7 @@ public record Rectangle(double width, double height) implements Shape {
 
     @Override
     public String toString() {
-        return "\"Прямоугольник\", со шириной = " + getWidth() + ", высотой = " + getHeight();
+        return "\"Прямоугольник\", с шириной = " + width + ", высотой = " + height;
     }
 
     @Override

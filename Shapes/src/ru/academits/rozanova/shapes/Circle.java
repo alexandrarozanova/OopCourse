@@ -1,10 +1,6 @@
 package ru.academits.rozanova.shapes;
 
 public record Circle(double radius) implements Shape {
-    public double getRadius() {
-        return radius;
-    }
-
     @Override
     public double getWidth() {
         return radius * 2;
@@ -27,7 +23,7 @@ public record Circle(double radius) implements Shape {
 
     @Override
     public String toString() {
-        return "\"Круг\", с радиусом = " + getRadius();
+        return "\"Круг\", с радиусом = " + radius;
     }
 
     @Override

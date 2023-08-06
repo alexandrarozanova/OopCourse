@@ -1,34 +1,54 @@
 package ru.academits.rozanova.shapes_main;
 
 import ru.academits.rozanova.shapes.*;
+import ru.academits.rozanova.shapes_comparators.ShapeAreaComparator;
+import ru.academits.rozanova.shapes_comparators.ShapeHeightComparator;
+import ru.academits.rozanova.shapes_comparators.ShapePerimeterComparator;
+import ru.academits.rozanova.shapes_comparators.ShapeWidthComparator;
 
 import java.util.Arrays;
 
 public class Main {
-    public static boolean isEmpty(Shape[] shapes) {
-        return shapes.length <= 1;
-    }
-
     public static Shape getMaxAreaShape(Shape[] shapes) {
-        Arrays.sort(shapes, new AreaComparator());
+        if (shapes.length == 0) {
+            return null;
+        }
+
+        Arrays.sort(shapes, new ShapeAreaComparator());
 
         return shapes[shapes.length - 1];
     }
 
     public static Shape getSecondMaxPerimeterShape(Shape[] shapes) {
-        Arrays.sort(shapes, new PerimeterComparator());
+        if (shapes.length == 0) {
+            return null;
+        }
+
+        if (shapes.length == 1) {
+            throw new ArrayIndexOutOfBoundsException("Недостаточно фигур для сравнения.");
+        }
+
+        Arrays.sort(shapes, new ShapePerimeterComparator());
 
         return shapes[shapes.length - 2];
     }
 
     public static Shape getMaxWidthShape(Shape[] shapes) {
-        Arrays.sort(shapes, new WidthComparator());
+        if (shapes.length == 0) {
+            return null;
+        }
+
+        Arrays.sort(shapes, new ShapeWidthComparator());
 
         return shapes[shapes.length - 1];
     }
 
     public static Shape getMaxHeightShape(Shape[] shapes) {
-        Arrays.sort(shapes, new HeightComparator());
+        if (shapes.length == 0) {
+            return null;
+        }
+
+        Arrays.sort(shapes, new ShapeHeightComparator());
 
         return shapes[shapes.length - 1];
     }
@@ -43,26 +63,30 @@ public class Main {
                 new Circle(10)
         };
 
-        if (isEmpty(shapes)) {
-            System.out.println("Недостаточно фигур для сравнения.");
-        } else {
+        try {
             if (shapes[0].equals(shapes[1])) {
-                System.out.println("Первые две фигуры равны.");
+                System.out.println("Первые две фигуры массива равны.");
             } else {
-                System.out.println("Первые две фигуры не равны.");
+                System.out.println("Первые две фигуры массива не равны.");
             }
-
-            Shape maxAreaShape = getMaxAreaShape(shapes);
-            System.out.println("Максимальная площадь - " + maxAreaShape);
-
-            Shape secondMaxPerimeterShape = getSecondMaxPerimeterShape(shapes);
-            System.out.println("Второй по величине периметр - " + secondMaxPerimeterShape);
-
-            Shape maxWidthShape = getMaxWidthShape(shapes);
-            System.out.println("Максимальная ширина - " + maxWidthShape);
-
-            Shape maxHeightShape = getMaxHeightShape(shapes);
-            System.out.println("Максимальная высота - " + maxHeightShape);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Недостаточно фигур в массиве для сравнения.");
         }
+
+        Shape maxAreaShape = getMaxAreaShape(shapes);
+        System.out.println("Максимальная площадь у фигуры - " + maxAreaShape);
+
+        try {
+            Shape secondMaxPerimeterShape = getSecondMaxPerimeterShape(shapes);
+            System.out.println("Второй по величине периметр у фигуры - " + secondMaxPerimeterShape);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Второй по величине периметр не найден, получена ошибка: " + e.getMessage());
+        }
+
+        Shape maxWidthShape = getMaxWidthShape(shapes);
+        System.out.println("Максимальная ширина у фигуры - " + maxWidthShape);
+
+        Shape maxHeightShape = getMaxHeightShape(shapes);
+        System.out.println("Максимальная высота у фигуры - " + maxHeightShape);
     }
 }
