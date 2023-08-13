@@ -38,10 +38,7 @@ public class Range {
             return null;
         }
 
-        double newFrom = Math.max(from, range.from);
-        double newTo = Math.min(to, range.to);
-
-        return new Range(newFrom, newTo);
+        return new Range(Math.max(from, range.from), Math.min(to, range.to));
     }
 
     public Range[] getUnion(Range range) {
@@ -49,10 +46,7 @@ public class Range {
             return new Range[]{new Range(from, to), new Range(range.from, range.to)};
         }
 
-        double newFrom = Math.min(from, range.from);
-        double newTo = Math.max(to, range.to);
-
-        return new Range[]{new Range(newFrom, newTo)};
+        return new Range[]{new Range(Math.min(from, range.from), Math.max(to, range.to))};
     }
 
     public Range[] getDifference(Range range) {
