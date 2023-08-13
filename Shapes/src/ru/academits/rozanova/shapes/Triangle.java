@@ -17,7 +17,7 @@ public record Triangle(double x1, double y1, double x2, double y2, double x3, do
         return Math.abs((x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1)) <= EPSILON;
     }
 
-    public double getSideLength(double x1, double x2, double y1, double y2) {
+    private static double getSideLength(double x1, double y1, double x2, double y2) {
         return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
     }
 
@@ -27,9 +27,9 @@ public record Triangle(double x1, double y1, double x2, double y2, double x3, do
             return 0;
         }
 
-        double side1Length = getSideLength(x1, x2, y1, y2);
-        double side2Length = getSideLength(x2, x3, y2, y3);
-        double side3Length = getSideLength(x1, x3, y1, y3);
+        double side1Length = getSideLength(x1, y1, x2, y2);
+        double side2Length = getSideLength(x2, y2, x3, y3);
+        double side3Length = getSideLength(x1, y1, x3, y3);
 
         double triangleHalfPerimeter = (side1Length + side2Length + side3Length) / 2;
 
@@ -43,9 +43,9 @@ public record Triangle(double x1, double y1, double x2, double y2, double x3, do
             return 0;
         }
 
-        double side1Length = getSideLength(x1, x2, y1, y2);
-        double side2Length = getSideLength(x2, x3, y2, y3);
-        double side3Length = getSideLength(x1, x3, y1, y3);
+        double side1Length = getSideLength(x1, y1, x2, y2);
+        double side2Length = getSideLength(x2, y2, x3, y3);
+        double side3Length = getSideLength(x1, y1, x3, y3);
 
         return side1Length + side2Length + side3Length;
     }
