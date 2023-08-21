@@ -11,7 +11,7 @@ import java.util.Arrays;
 public class Main {
     public static Shape getMaxAreaShape(Shape[] shapes) {
         if (shapes.length == 0) {
-            throw new ArrayIndexOutOfBoundsException("Недостаточно фигур для сравнения.");
+            return null;
         }
 
         Arrays.sort(shapes, new ShapeAreaComparator());
@@ -21,7 +21,7 @@ public class Main {
 
     public static Shape getSecondMaxPerimeterShape(Shape[] shapes) {
         if (shapes.length <= 1) {
-            throw new ArrayIndexOutOfBoundsException("Недостаточно фигур для сравнения.");
+            return null;
         }
 
         Arrays.sort(shapes, new ShapePerimeterComparator());
@@ -31,7 +31,7 @@ public class Main {
 
     public static Shape getMaxWidthShape(Shape[] shapes) {
         if (shapes.length == 0) {
-            throw new ArrayIndexOutOfBoundsException("Недостаточно фигур для сравнения.");
+            return null;
         }
 
         Arrays.sort(shapes, new ShapeWidthComparator());
@@ -41,7 +41,7 @@ public class Main {
 
     public static Shape getMaxHeightShape(Shape[] shapes) {
         if (shapes.length == 0) {
-            throw new ArrayIndexOutOfBoundsException("Недостаточно фигур для сравнения.");
+            return null;
         }
 
         Arrays.sort(shapes, new ShapeHeightComparator());
