@@ -19,7 +19,7 @@ public class Main {
         vector1 = new Vector(array1);
         System.out.println("Новое значение первого вектора: " + vector1 + ", размер: " + vector1.getSize() + ", длина: " + vector1.getLength());
 
-        vector1.setElement(6, 4);
+        vector1.setElement(4, 6);
         System.out.println("Изменен последний элемент вектора, новое значение: " + vector1 + ", размер: " + vector1.getSize() + ", длина: " + vector1.getLength());
 
         Vector vector2 = new Vector(vector1);
@@ -46,6 +46,6 @@ public class Main {
 
         System.out.println("Вычитание первого и второго вектора: " + Vector.getDifference(vector1, vector2));
 
-        System.out.println("Скалярное произведение векторов: " + Vector.getScalarMultiplyProduct(vector1, vector2));
+        System.out.println("Скалярное произведение векторов: " + Vector.getDotProduct(vector1, vector2));
     }
 }

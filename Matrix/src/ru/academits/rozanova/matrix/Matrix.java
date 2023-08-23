@@ -256,7 +256,7 @@ public class Matrix {
                 sum += rows[i].getElement(j) * vector.getElement(j);
             }
 
-            resultVector.setElement(sum, i);
+            resultVector.setElement(i, sum);
         }
 
         return resultVector;
@@ -274,7 +274,7 @@ public class Matrix {
 
         for (int i = 0; i < rows.length; i++) {
             for (int j = 0; j < rows.length; j++) {
-                rows[i].setElement(rows[i].getElement(j) + matrix.rows[i].getElement(j), j);
+                rows[i].setElement(j, rows[i].getElement(j) + matrix.rows[i].getElement(j));
             }
         }
     }
@@ -291,7 +291,7 @@ public class Matrix {
 
         for (int i = 0; i < rows.length; i++) {
             for (int j = 0; j < rows.length; j++) {
-                rows[i].setElement(rows[i].getElement(j) - matrix.rows[i].getElement(j), j);
+                rows[i].setElement(j, rows[i].getElement(j) - matrix.rows[i].getElement(j));
             }
         }
     }
@@ -354,7 +354,7 @@ public class Matrix {
                     sum += resultMatrix.rows[i].getElement(k) * matrix2.getColumn(j).getElement(k);
                 }
 
-                vector.setElement(sum, j);
+                vector.setElement(j, sum);
             }
 
             resultMatrix.setRow(i, vector);

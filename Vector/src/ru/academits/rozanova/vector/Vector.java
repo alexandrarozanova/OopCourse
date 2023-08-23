@@ -7,7 +7,7 @@ public class Vector {
 
     public Vector(int size) {
         if (size <= 0) {
-            throw new IllegalArgumentException("Размерность вектора должна быть больше 0, переданный размер вектора = " + size);
+            throw new IllegalArgumentException("Размер вектора должен быть больше 0, переданный размер вектора = " + size);
         }
 
         elements = new double[size];
@@ -15,7 +15,7 @@ public class Vector {
 
     public Vector(Vector vector) {
         if (vector == null) {
-            throw new NullPointerException("Вектор не существует.");
+            throw new NullPointerException("Вектор не должен быть null.");
         }
 
         elements = Arrays.copyOf(vector.elements, vector.elements.length);
@@ -23,7 +23,7 @@ public class Vector {
 
     public Vector(double[] array) {
         if (array == null) {
-            throw new NullPointerException("Массив не существует.");
+            throw new NullPointerException("Массив не должен быть null.");
         }
 
         if (array.length == 0) {
@@ -35,11 +35,11 @@ public class Vector {
 
     public Vector(int size, double[] array) {
         if (size <= 0) {
-            throw new IllegalArgumentException("Размерность вектора должна быть больше 0, переданный размер вектора = " + size);
+            throw new IllegalArgumentException("Размер вектора должен быть больше 0, переданный размер вектора = " + size);
         }
 
-        if (array.length == 0) {
-            throw new IllegalArgumentException("Длина массива для создания вектора должна быть больше 0.");
+        if (array == null) {
+            throw new NullPointerException("Массив не должен быть null.");
         }
 
         elements = Arrays.copyOf(array, size);
@@ -53,38 +53,36 @@ public class Vector {
         return elements[index];
     }
 
-    public void setElement(double element, int index) {
+    public void setElement(int index, double element) {
         elements[index] = element;
     }
 
-    public static double[] increaseArray(double[] elements, int size) {
+    private void increaseArray(int size) {
         if (elements.length < size) {
-            return Arrays.copyOf(elements, size);
+            elements = Arrays.copyOf(elements, size);
         }
-
-        return elements;
     }
 
     public void add(Vector vector) {
         if (vector == null) {
-            throw new NullPointerException("Вектор не существует");
+            throw new NullPointerException("Вектор не должен быть null.");
         }
 
-        elements = increaseArray(elements, vector.elements.length);
+        increaseArray(vector.elements.length);
 
-        for (int i = 0; i < elements.length && i < vector.elements.length; i++) {
+        for (int i = 0; i < vector.elements.length; i++) {
             elements[i] += vector.elements[i];
         }
     }
 
     public void subtract(Vector vector) {
         if (vector == null) {
-            throw new NullPointerException("Вектор не существует");
+            throw new NullPointerException("Вектор не должен быть null.");
         }
 
-        elements = increaseArray(elements, vector.elements.length);
+        increaseArray(vector.elements.length);
 
-        for (int i = 0; i < elements.length && i < vector.elements.length; i++) {
+        for (int i = 0; i < vector.elements.length; i++) {
             elements[i] -= vector.elements[i];
         }
     }
@@ -100,66 +98,70 @@ public class Vector {
     }
 
     public double getLength() {
-        double length = 0;
+        double sum = 0;
 
         for (double element : elements) {
-            length += element * element;
+            sum += element * element;
         }
 
-        return Math.sqrt(length);
+        return Math.sqrt(sum);
     }
 
     public static Vector getSum(Vector vector1, Vector vector2) {
         if (vector1 == null) {
-            throw new NullPointerException("Невозможно вычислить сумму векторов, первого вектора не существует.");
+            throw new NullPointerException("Невозможно вычислить сумму векторов, первый вектор null.");
         }
 
         if (vector2 == null) {
-            throw new NullPointerException("Невозможно вычислить сумму векторов, второго вектора не существует.");
+            throw new NullPointerException("Невозможно вычислить сумму векторов, второй вектор null.");
         }
 
         Vector resultVector = new Vector(vector1);
         resultVector.add(vector2);
 
-        return new Vector(resultVector);
+        return resultVector;
     }
 
     public static Vector getDifference(Vector vector1, Vector vector2) {
         if (vector1 == null) {
-            throw new NullPointerException("Невозможно вычислить вычитание векторов, первого вектора не существует.");
+            throw new NullPointerException("Невозможно вычислить вычитание векторов, первый вектор null.");
         }
 
         if (vector2 == null) {
-            throw new NullPointerException("Невозможно вычислить вычитание векторов, второго вектора не существует.");
+            throw new NullPointerException("Невозможно вычислить вычитание векторов, второй вектор null.");
         }
 
         Vector resultVector = new Vector(vector1);
         resultVector.subtract(vector2);
 
-        return new Vector(resultVector);
+        return resultVector;
     }
 
-    public static double getScalarMultiplyProduct(Vector vector1, Vector vector2) {
+    public static double getDotProduct(Vector vector1, Vector vector2) {
         if (vector1 == null) {
-            throw new NullPointerException("Невозможно вычислить скалярное произведение векторов, первого вектора не существует.");
+            throw new NullPointerException("Невозможно вычислить скалярное произведение векторов, первый вектор null.");
         }
 
         if (vector2 == null) {
-            throw new NullPointerException("Невозможно вычислить скалярное произведение векторов, второго вектора не существует.");
+            throw new NullPointerException("Невозможно вычислить скалярное произведение векторов, второй вектор null.");
         }
 
-        double scalarMultiplyProduct = 0;
+        int minSize = Math.min(vector1.elements.length, vector2.elements.length);
 
-        for (int i = 0; i < vector1.elements.length && i < vector2.elements.length; i++) {
-            scalarMultiplyProduct += vector1.elements[i] * vector2.elements[i];
+        double result = 0;
+
+        for (int i = 0; i < minSize; i++) {
+            result += vector1.elements[i] * vector2.elements[i];
         }
 
-        return scalarMultiplyProduct;
+        return result;
     }
 
     @Override
     public String toString() {
-        StringBuilder stringBuilder = new StringBuilder("{");
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append('{');
 
         for (int i = 0; i < elements.length - 1; i++) {
             stringBuilder.append(elements[i])
@@ -167,7 +169,7 @@ public class Vector {
         }
 
         stringBuilder.append(elements[elements.length - 1])
-                .append("}");
+                .append('}');
 
         return stringBuilder.toString();
     }
