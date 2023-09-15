@@ -49,7 +49,7 @@ public class Main {
         return shapes[shapes.length - 1];
     }
 
-    public static boolean checkShapesEquals(Shape[] shapes) {
+    public static boolean checkTwoFirstShapesEquals(Shape[] shapes) {
         if (shapes.length < 2) {
             throw new IllegalArgumentException("Недостаточно фигур для сравнения.");
         }
@@ -67,7 +67,7 @@ public class Main {
                 new Circle(10)
         };
 
-        if (checkShapesEquals(shapes)) {
+        if (checkTwoFirstShapesEquals(shapes)) {
             System.out.println("Первые две фигуры массива равны.");
         } else {
             System.out.println("Первые две фигуры массива не равны.");
