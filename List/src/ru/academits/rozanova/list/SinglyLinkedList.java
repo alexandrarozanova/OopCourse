@@ -118,6 +118,8 @@ public class SinglyLinkedList<E> {
 
         if (item == null) {
             System.out.println("Элемент не найден.");
+
+            return false;
         } else {
             if (previousItem == null) {
                 head = head.getNext();
@@ -132,6 +134,10 @@ public class SinglyLinkedList<E> {
     }
 
     public E removeFirstItem() {
+        if (size == 0) {
+            throw new NoSuchElementException("Список пуст.");
+        }
+
         E removedItemData = head.getData();
 
         head = head.getNext();
