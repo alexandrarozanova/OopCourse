@@ -1,4 +1,4 @@
-package ru.academits.rozanova.arrayListHome;
+package ru.academits.rozanova.array_list_home;
 
 import java.io.*;
 import java.util.ArrayList;
