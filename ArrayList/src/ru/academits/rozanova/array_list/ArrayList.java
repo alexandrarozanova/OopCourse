@@ -183,7 +183,7 @@ public class ArrayList<E> implements List<E> {
             return true;
         }
 
-        checkIndexValidity(index);
+        checkIndex(index);
 
         Object[] collectionItems = collection.toArray();
 
@@ -245,14 +245,14 @@ public class ArrayList<E> implements List<E> {
 
     @Override
     public E get(int index) {
-        checkIndexValidity(index);
+        checkIndex(index);
 
         return items[index];
     }
 
     @Override
     public E set(int index, E element) {
-        checkIndexValidity(index);
+        checkIndex(index);
 
         E oldElement = get(index);
 
@@ -263,7 +263,7 @@ public class ArrayList<E> implements List<E> {
 
     @Override
     public void add(int index, E element) {
-        checkIndexValidity(index);
+        checkIndex(index);
 
         if (size >= items.length) {
             increaseCapacity();
@@ -280,7 +280,7 @@ public class ArrayList<E> implements List<E> {
 
     @Override
     public E remove(int index) {
-        checkIndexValidity(index);
+        checkIndex(index);
 
         if (index <= size) {
             System.arraycopy(items, index + 1, items, index, size - index - 1);
@@ -333,7 +333,7 @@ public class ArrayList<E> implements List<E> {
         }
     }
 
-    private void checkIndexValidity(int index) {
+    private void checkIndex(int index) {
         if (index < 0) {
             throw new IndexOutOfBoundsException("Индекс не может быть меньше нуля.");
         }
