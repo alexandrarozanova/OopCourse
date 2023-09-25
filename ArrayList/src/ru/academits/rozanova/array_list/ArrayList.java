@@ -6,6 +6,7 @@ public class ArrayList<E> implements List<E> {
     private static final int CAPACITY = 10;
     private E[] items;
     private int size;
+    private int modCount;
 
     public ArrayList() {
         //noinspection unchecked
@@ -62,7 +63,12 @@ public class ArrayList<E> implements List<E> {
     }
 
     private class ArrayListIterator implements Iterator<E> {
+        private final int defaultModCount;
         private int currentIndex = -1;
+
+        private ArrayListIterator() {
+            defaultModCount = modCount;
+        }
 
         @Override
         public boolean hasNext() {
@@ -71,6 +77,14 @@ public class ArrayList<E> implements List<E> {
 
         @Override
         public E next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException("Достигнут конец списка, невозможно получить следующий элемент.");
+            }
+
+            if (defaultModCount != modCount) {
+                throw new ConcurrentModificationException("Список был изменен.");
+            }
+
             ++currentIndex;
 
             return items[currentIndex];
@@ -111,7 +125,9 @@ public class ArrayList<E> implements List<E> {
         }
 
         items[size] = element;
+
         ++size;
+        ++modCount;
 
         return true;
     }
@@ -125,6 +141,7 @@ public class ArrayList<E> implements List<E> {
                 items[size - 1] = null;
 
                 --size;
+                ++modCount;
 
                 return true;
             }
@@ -166,6 +183,7 @@ public class ArrayList<E> implements List<E> {
             items[i] = (E) collectionItems[j];
 
             ++size;
+            ++modCount;
         }
 
         return true;
@@ -197,6 +215,7 @@ public class ArrayList<E> implements List<E> {
             items[i] = (E) collectionItems[j];
 
             ++size;
+            ++modCount;
         }
 
         return true;
@@ -276,6 +295,7 @@ public class ArrayList<E> implements List<E> {
         items[index] = element;
 
         ++size;
+        ++modCount;
     }
 
     @Override
@@ -291,6 +311,7 @@ public class ArrayList<E> implements List<E> {
         items[size - 1] = null;
 
         --size;
+        ++modCount;
 
         return removedElement;
     }
