@@ -7,17 +7,16 @@ import java.util.List;
 
 public class ArrayListHome {
     public static List<String> readFileLines(String fileName) throws IOException {
-        List<String> lines = new ArrayList<>();
-
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))) {
+            List<String> lines = new ArrayList<>();
             String line;
 
             while ((line = bufferedReader.readLine()) != null) {
                 lines.add(line);
             }
-        }
 
-        return lines;
+            return lines;
+        }
     }
 
     public static void removeEvenNumbers(List<Integer> numbers) {
@@ -32,7 +31,7 @@ public class ArrayListHome {
         }
     }
 
-    public static List<Integer> getUniqueList(List<Integer> numbers) {
+    public static List<Integer> getUniqueNumbersList(List<Integer> numbers) {
         List<Integer> uniqueNumbersList = new ArrayList<>(numbers.size());
 
         for (Integer number : numbers) {
@@ -60,6 +59,6 @@ public class ArrayListHome {
         removeEvenNumbers(numbers);
         System.out.println("Список, после удаления из него четных чисел: " + numbers);
 
-        System.out.println("Список, содержащий уникальные элементы: " + getUniqueList(numbers));
+        System.out.println("Список, содержащий уникальные элементы: " + getUniqueNumbersList(numbers));
     }
 }
