@@ -45,8 +45,8 @@ public class ArrayListHome {
 
     public static void main(String[] args) {
         try {
-            String file = "file.txt";
-            System.out.println("Файл " + file + " содержит следующие данные: " + readFileLines(file));
+            String fileName = "file.txt";
+            System.out.println("Файл " + fileName + " содержит следующие данные: " + readFileLines(fileName));
         } catch (FileNotFoundException e) {
             System.out.println("Файл не найден.");
         } catch (IOException e) {
