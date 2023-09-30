@@ -20,30 +20,22 @@ public class SinglyLinkedList<E> {
     }
 
     private void checkIndex(int index) {
-        if (index < 0) {
-            throw new IndexOutOfBoundsException("Индекс не может быть отрицательным числом.");
-        }
-
-        if (index >= size) {
-            throw new IndexOutOfBoundsException("Индекс не может быть больше размера списка.");
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException("Указанный индекс " + index + " выходит за диапазон допустимых значений: [0; " + (size - 1) + "].");
         }
     }
 
     public E get(int index) {
         checkIndex(index);
 
-        ListItem<E> item = getItem(index);
-
-        return item.getData();
+        return getItem(index).getData();
     }
 
     public E set(int index, E data) {
         checkIndex(index);
 
         ListItem<E> item = getItem(index);
-
         E oldData = item.getData();
-
         item.setData(data);
 
         return oldData;
@@ -53,9 +45,7 @@ public class SinglyLinkedList<E> {
         checkIndex(index);
 
         ListItem<E> previousItem = getItem(index - 1);
-
         E removedItemData = previousItem.getNext().getData();
-
         previousItem.setNext(previousItem.getNext().getNext());
 
         size--;
@@ -70,12 +60,8 @@ public class SinglyLinkedList<E> {
     }
 
     public void add(int index, E data) {
-        if (index < 0) {
-            throw new IndexOutOfBoundsException("Индекс не может быть отрицательным числом.");
-        }
-
-        if (index > size) {
-            throw new IndexOutOfBoundsException("Индекс не может быть больше размера списка.");
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException("Указанный индекс " + index + " выходит за диапазон допустимых значений: [0; " + size + "].");
         }
 
         if (index == 0) {
@@ -85,30 +71,29 @@ public class SinglyLinkedList<E> {
         }
 
         ListItem<E> previousItem = getItem(index - 1);
-
         previousItem.setNext(new ListItem<>(data, previousItem.getNext()));
 
         size++;
     }
 
     public boolean remove(E data) {
-        ListItem<E> item = head;
+        ListItem<E> currentItem = head;
         ListItem<E> previousItem = null;
 
-        for (; item != null; previousItem = item, item = item.getNext()) {
-            if (Objects.equals(item.getData(), data)) {
+        for (; currentItem != null; previousItem = currentItem, currentItem = currentItem.getNext()) {
+            if (Objects.equals(currentItem.getData(), data)) {
                 break;
             }
         }
 
-        if (item == null) {
+        if (currentItem == null) {
             return false;
         }
 
         if (previousItem == null) {
             head = head.getNext();
         } else {
-            previousItem.setNext(item.getNext());
+            previousItem.setNext(currentItem.getNext());
         }
 
         size--;
@@ -122,7 +107,6 @@ public class SinglyLinkedList<E> {
         }
 
         E removedItemData = head.getData();
-
         head = head.getNext();
 
         size--;
@@ -135,14 +119,18 @@ public class SinglyLinkedList<E> {
             return;
         }
 
-        ListItem<E> item = head;
+        if (size == 1) {
+            return;
+        }
+
+        ListItem<E> currentItem = head;
         ListItem<E> previousItem = null;
 
-        while (item != null) {
-            ListItem<E> nextItem = item.getNext();
-            item.setNext(previousItem);
-            previousItem = item;
-            item = nextItem;
+        while (currentItem != null) {
+            ListItem<E> nextItem = currentItem.getNext();
+            currentItem.setNext(previousItem);
+            previousItem = currentItem;
+            currentItem = nextItem;
         }
 
         head = previousItem;
