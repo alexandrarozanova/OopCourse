@@ -115,11 +115,7 @@ public class SinglyLinkedList<E> {
     }
 
     public void reverse() {
-        if (head == null) {
-            return;
-        }
-
-        if (size == 1) {
+        if (head == null || size == 1) {
             return;
         }
 
