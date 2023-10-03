@@ -16,13 +16,20 @@ public class Main {
                 new Person("Ольга", 18),
                 new Person("Максим", 28));
 
-        String uniqueNames = persons.stream()
+        List<String> uniqueNamesList = persons.stream()
+                .map(Person::name)
+                .distinct()
+                .toList();
+
+        System.out.println("Список уникальных имен: " + uniqueNamesList);
+
+        String uniqueNamesString = persons.stream()
                 .map(Person::name)
                 .distinct()
                 .collect(Collectors.joining(", ", "Имена: ", "."));
 
-        System.out.println("Список уникальных имен:");
-        System.out.println(uniqueNames);
+        System.out.println("Список уникальных имен в формате \"Имена: Петр, Иван.\":");
+        System.out.println(uniqueNamesString);
 
         OptionalDouble minorsAverageAge = persons.stream()
                 .filter(p -> p.age() < 18)
@@ -35,16 +42,16 @@ public class Main {
             System.out.println("В списке нет людей младше 18 лет.");
         }
 
-        Map<String, Double> averageAgeByPersons = persons.stream()
+        Map<String, Double> averageAgesByNames = persons.stream()
                 .collect(Collectors.groupingBy(Person::name, Collectors.averagingDouble(Person::age)));
 
         System.out.println("Средний возраст людей, сгруппированных по именам:");
 
-        averageAgeByPersons.forEach((name, age) ->
+        averageAgesByNames.forEach((name, age) ->
                 System.out.println("Имя: " + name + ", средний возраст: " + age));
 
         String personsWithAgeBetween20And45 = persons.stream()
-                .filter(p -> p.age() > 20 && p.age() < 45)
+                .filter(p -> p.age() >= 20 && p.age() <= 45)
                 .sorted(Comparator.comparingInt(Person::age).reversed())
                 .map(Person::name)
                 .collect(Collectors.joining(", "));
