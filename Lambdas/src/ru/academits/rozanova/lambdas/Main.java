@@ -23,9 +23,7 @@ public class Main {
 
         System.out.println("Список уникальных имен: " + uniqueNamesList);
 
-        String uniqueNamesString = persons.stream()
-                .map(Person::name)
-                .distinct()
+        String uniqueNamesString = uniqueNamesList.stream()
                 .collect(Collectors.joining(", ", "Имена: ", "."));
 
         System.out.println("Список уникальных имен в формате \"Имена: Петр, Иван.\":");
@@ -43,19 +41,19 @@ public class Main {
         }
 
         Map<String, Double> averageAgesByNames = persons.stream()
-                .collect(Collectors.groupingBy(Person::name, Collectors.averagingDouble(Person::age)));
+                .collect(Collectors.groupingBy(Person::name, Collectors.averagingInt(Person::age)));
 
         System.out.println("Средний возраст людей, сгруппированных по именам:");
 
         averageAgesByNames.forEach((name, age) ->
                 System.out.println("Имя: " + name + ", средний возраст: " + age));
 
-        String personsWithAgeBetween20And45 = persons.stream()
+        String personNamesWithAgeBetween20And45InString = persons.stream()
                 .filter(p -> p.age() >= 20 && p.age() <= 45)
                 .sorted(Comparator.comparingInt(Person::age).reversed())
                 .map(Person::name)
                 .collect(Collectors.joining(", "));
 
-        System.out.println("Список людей в возрасте от 20 до 45 лет, отсортированный по убыванию возраста: " + personsWithAgeBetween20And45);
+        System.out.println("Список людей в возрасте от 20 до 45 лет, отсортированный по убыванию возраста: " + personNamesWithAgeBetween20And45InString);
     }
 }
