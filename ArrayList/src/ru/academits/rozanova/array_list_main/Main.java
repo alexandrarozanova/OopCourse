@@ -4,31 +4,31 @@ import ru.academits.rozanova.array_list.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
-        ArrayList<Integer> numbers = new ArrayList<>();
+        ArrayList<Integer> numbers1 = new ArrayList<>();
 
-        numbers.add(1);
-        numbers.add(5);
-        numbers.add(3);
-        numbers.add(5);
+        numbers1.add(1);
+        numbers1.add(5);
+        numbers1.add(3);
+        numbers1.add(5);
 
-        System.out.println("Первый список: " + numbers + ", размер списка: " + numbers.size());
+        System.out.println("Первый список: " + numbers1 + ", размер списка: " + numbers1.size());
 
-        ArrayList<Integer> numbers2 = new ArrayList<>(numbers);
+        ArrayList<Integer> numbers2 = new ArrayList<>(numbers1);
         System.out.println("Второй список: " + numbers2 + ", размер списка: " + numbers2.size());
 
         ArrayList<Integer> numbers3 = new ArrayList<>(15);
 
-        numbers3.addAll(numbers);
+        numbers3.addAll(numbers1);
         numbers3.addAll(2, numbers2);
 
         System.out.println("Третий список: " + numbers3 + ", размер списка: " + numbers3.size());
 
-        Integer[] arrayNumbers = {10, 11, 12, 13, 14, 15};
+        Integer[] numbersArray = {10, 11, 12, 13, 14, 15};
 
-        ArrayList<Integer> numbers4 = new ArrayList<>(arrayNumbers);
+        ArrayList<Integer> numbers4 = new ArrayList<>(numbersArray);
         System.out.println("Четвертый список: " + numbers4 + ", размер списка: " + numbers4.size());
 
-        if (numbers.contains(7)) {
+        if (numbers1.contains(7)) {
             System.out.println("Число 7 находится в первом списке.");
         } else {
             System.out.println("Число 7 не находится в первом списке.");
@@ -43,10 +43,10 @@ public class Main {
             System.out.println("Не все числа второго списка находятся в третьем.");
         }
 
-        numbers3.removeAll(numbers);
+        numbers3.removeAll(numbers1);
         System.out.println("Третий список после удаления из него всех чисел первого списка: " + numbers3 + ", размер списка: " + numbers3.size());
 
-        numbers3.addAll(numbers);
+        numbers3.addAll(numbers1);
         numbers3.addAll(numbers4);
 
         System.out.println("Третий список после добавления в него чисел первого и четвертого списка: " + numbers3 + ", размер списка: " + numbers3.size());
@@ -57,7 +57,7 @@ public class Main {
         numbers2.clear();
         System.out.println("Второй список после удаления из него всех чисел: " + numbers2);
 
-        numbers2.addAll(numbers);
+        numbers2.addAll(numbers1);
         System.out.println("Второй список после добавления в него чисел первого списка: " + numbers2);
 
         System.out.println("Второй элемент второго списка: " + numbers2.get(1));
@@ -73,7 +73,7 @@ public class Main {
 
         System.out.println("Индекс числа 7 второго списка: " + numbers2.indexOf(7));
 
-        System.out.println("Послений индекс числа 5 первого списка: " + numbers.lastIndexOf(5));
+        System.out.println("Послений индекс числа 5 первого списка: " + numbers1.lastIndexOf(5));
 
         numbers2.trimToSize();
         System.out.println("Второй список после урезания внутреннего массива до размера списка: " + numbers2);
