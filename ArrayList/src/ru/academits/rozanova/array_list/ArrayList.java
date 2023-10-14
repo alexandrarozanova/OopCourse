@@ -16,7 +16,7 @@ public class ArrayList<E> implements List<E> {
 
     public ArrayList(int capacity) {
         if (capacity < 0) {
-            throw new IllegalArgumentException("Некорректное значение вместимости списка для его создания: " + capacity + ", значение должно начинаться с 0.");
+            throw new IllegalArgumentException("Некорректное значение вместимости списка для его создания: " + capacity + ", значение должно быть >= 0.");
         }
 
         //noinspection unchecked
@@ -132,11 +132,13 @@ public class ArrayList<E> implements List<E> {
 
     @Override
     public boolean remove(Object o) {
-        if (indexOf(o) == -1) {
+        int index = indexOf(o);
+
+        if (index == -1) {
             return false;
         }
 
-        remove(indexOf(o));
+        remove(index);
 
         return true;
     }
@@ -158,9 +160,7 @@ public class ArrayList<E> implements List<E> {
 
     @Override
     public boolean addAll(Collection<? extends E> collection) {
-        addAll(size, collection);
-
-        return true;
+        return addAll(size, collection);
     }
 
     @Override
@@ -171,6 +171,10 @@ public class ArrayList<E> implements List<E> {
 
         if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException("Указанный индекс " + index + " выходит за диапазон допустимых значений: [0; " + size + "].");
+        }
+
+        if (collection.isEmpty()) {
+            return false;
         }
 
         ensureCapacity(size + collection.size());
@@ -197,7 +201,7 @@ public class ArrayList<E> implements List<E> {
             throw new NullPointerException("Коллекция не может быть null.");
         }
 
-        if (collection.isEmpty()) {
+        if (collection.isEmpty() || isEmpty()) {
             return false;
         }
 
@@ -216,6 +220,10 @@ public class ArrayList<E> implements List<E> {
             throw new NullPointerException("Коллекция не может быть null.");
         }
 
+        if (collection.isEmpty() || isEmpty()) {
+            return false;
+        }
+
         for (int i = size - 1; i >= 0; i--) {
             if (!collection.contains(items[i])) {
                 remove(i);
@@ -227,10 +235,13 @@ public class ArrayList<E> implements List<E> {
 
     @Override
     public void clear() {
-        for (int i = size - 1; i >= 0; i--) {
-            items[i] = null;
+        if (isEmpty()) {
+            return;
         }
 
+        Arrays.fill(items, 0, size, null);
+
+        ++modCount;
         size = 0;
     }
 
@@ -262,7 +273,7 @@ public class ArrayList<E> implements List<E> {
             increaseCapacity();
         }
 
-        if (index < size - 1) {
+        if (index < size) {
             System.arraycopy(items, index, items, index + 1, size - index);
         }
 
@@ -314,7 +325,8 @@ public class ArrayList<E> implements List<E> {
 
     private void increaseCapacity() {
         if (items.length == 0) {
-            items = Arrays.copyOf(items, DEFAULT_CAPACITY);
+            //noinspection unchecked
+            items = (E[]) new Object[DEFAULT_CAPACITY];
 
             return;
         }
