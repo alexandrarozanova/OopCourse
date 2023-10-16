@@ -220,7 +220,7 @@ public class ArrayList<E> implements List<E> {
             throw new NullPointerException("Коллекция не может быть null.");
         }
 
-        if (collection.isEmpty() || isEmpty()) {
+        if (isEmpty()) {
             return false;
         }
 

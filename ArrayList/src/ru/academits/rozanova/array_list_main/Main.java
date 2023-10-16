@@ -73,7 +73,7 @@ public class Main {
 
         System.out.println("Индекс числа 7 второго списка: " + numbers2.indexOf(7));
 
-        System.out.println("Послений индекс числа 5 первого списка: " + numbers1.lastIndexOf(5));
+        System.out.println("Последний индекс числа 5 первого списка: " + numbers1.lastIndexOf(5));
 
         numbers2.trimToSize();
         System.out.println("Второй список после урезания внутреннего массива до размера списка: " + numbers2);
