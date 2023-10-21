@@ -15,8 +15,8 @@ public class HashTable<E> implements Collection<E> {
     }
 
     public HashTable(int capacity) {
-        if (capacity < 0) {
-            throw new IllegalArgumentException("Недопустимое значение для размера таблицы: " + capacity + ", размер таблицы должен начинаться с 0.");
+        if (capacity <= 0) {
+            throw new IllegalArgumentException("Недопустимое значение для размера хэш-таблицы: " + capacity + ", размер хэш-таблицы должен быть > 0.");
         }
 
         //noinspection unchecked
@@ -34,14 +34,10 @@ public class HashTable<E> implements Collection<E> {
     }
 
     @Override
-    public boolean contains(Object item) {
-        int index = getIndex(item);
+    public boolean contains(Object object) {
+        int index = getIndex(object);
 
-        if (lists[index] == null) {
-            return false;
-        }
-
-        return lists[index].contains(item);
+        return lists[index] != null && lists[index].contains(object);
     }
 
     @Override
@@ -51,8 +47,9 @@ public class HashTable<E> implements Collection<E> {
 
     private class HashTableIterator implements Iterator<E> {
         private final int initialModCount;
-        private int currentListIndex = 0;
+        private int currentListIndex;
         private int currentItemIndex = -1;
+        private int visitedElements;
 
         private HashTableIterator() {
             initialModCount = modCount;
@@ -60,24 +57,26 @@ public class HashTable<E> implements Collection<E> {
 
         @Override
         public boolean hasNext() {
-            while (currentListIndex < lists.length && lists[currentListIndex] == null) {
-                currentListIndex++;
-            }
-
-            return currentListIndex < lists.length;
+            return visitedElements < size;
         }
 
         @Override
         public E next() {
             if (!hasNext()) {
-                throw new NoSuchElementException("Достигнут конец таблицы, невозможно получить следующий элемент.");
+                throw new NoSuchElementException("Достигнут конец хэш-таблицы таблицы, невозможно получить следующий элемент.");
             }
 
             if (initialModCount != modCount) {
-                throw new ConcurrentModificationException("Таблица была изменена.");
+                throw new ConcurrentModificationException("Хэш-таблица была изменена.");
             }
 
             currentItemIndex++;
+            visitedElements++;
+
+            while (lists[currentListIndex] == null || lists[currentListIndex].isEmpty()) {
+                currentListIndex++;
+            }
+
             E item = lists[currentListIndex].get(currentItemIndex);
 
             if (currentItemIndex == lists[currentListIndex].size() - 1 && hasNext()) {
@@ -93,14 +92,14 @@ public class HashTable<E> implements Collection<E> {
     public Object[] toArray() {
         Object[] array = new Object[size];
 
-        int index = 0;
+        int i = 0;
 
         for (ArrayList<E> list : lists) {
             if (list != null) {
                 for (E item : list) {
-                    array[index] = item;
+                    array[i] = item;
 
-                    index++;
+                    i++;
                 }
             }
         }
@@ -112,7 +111,7 @@ public class HashTable<E> implements Collection<E> {
     public <T> T[] toArray(T[] array) {
         if (array.length < lists.length) {
             //noinspection unchecked
-            return (T[]) Arrays.copyOf(lists, lists.length);
+            return (T[]) Arrays.copyOf(toArray(), lists.length, array.getClass());
         }
 
         //noinspection SuspiciousSystemArraycopy
@@ -142,29 +141,27 @@ public class HashTable<E> implements Collection<E> {
     }
 
     @Override
-    public boolean remove(Object item) {
-        int index = getIndex(item);
+    public boolean remove(Object object) {
+        int index = getIndex(object);
 
         if (lists[index] == null) {
             return false;
         }
 
-        lists[index].remove(item);
+        if (lists[index].remove(object)) {
+            size--;
+            modCount++;
 
-        size--;
-        modCount++;
+            return true;
+        }
 
-        return true;
+        return false;
     }
 
     @Override
     public boolean containsAll(Collection<?> collection) {
         if (collection == null) {
             throw new NullPointerException("Коллекция не может быть null.");
-        }
-
-        if (collection.isEmpty()) {
-            return false;
         }
 
         for (Object list : collection) {
@@ -203,11 +200,17 @@ public class HashTable<E> implements Collection<E> {
             return false;
         }
 
-        for (Object list : collection) {
-            remove(list);
+        boolean isChanged = false;
+
+        for (Object item : collection) {
+            while (contains(item)) {
+                remove(item);
+
+                isChanged = true;
+            }
         }
 
-        return true;
+        return isChanged;
     }
 
     @Override
@@ -216,17 +219,25 @@ public class HashTable<E> implements Collection<E> {
             throw new NullPointerException("Коллекция не может быть null.");
         }
 
+        boolean isChanged = false;
+        int newSize = 0;
+
         for (ArrayList<E> list : lists) {
             if (list != null) {
                 if (list.retainAll(collection)) {
-                    size--;
+                    newSize += list.size();
+
+                    isChanged = true;
                 }
             }
         }
 
-        modCount++;
+        if (isChanged) {
+            size = newSize;
+            modCount++;
+        }
 
-        return true;
+        return isChanged;
     }
 
     @Override
@@ -241,12 +252,12 @@ public class HashTable<E> implements Collection<E> {
         modCount++;
     }
 
-    private int getIndex(Object item) {
-        if (item == null) {
+    private int getIndex(Object object) {
+        if (object == null) {
             return 0;
         }
 
-        return Math.abs(item.hashCode() % lists.length);
+        return Math.abs(object.hashCode() % lists.length);
     }
 
     @Override
