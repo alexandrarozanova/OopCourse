@@ -49,7 +49,7 @@ public class HashTable<E> implements Collection<E> {
         private final int initialModCount;
         private int currentListIndex;
         private int currentItemIndex = -1;
-        private int visitedElements;
+        private int visitedItemsCount;
 
         private HashTableIterator() {
             initialModCount = modCount;
@@ -57,7 +57,7 @@ public class HashTable<E> implements Collection<E> {
 
         @Override
         public boolean hasNext() {
-            return visitedElements < size;
+            return visitedItemsCount < size;
         }
 
         @Override
@@ -71,7 +71,7 @@ public class HashTable<E> implements Collection<E> {
             }
 
             currentItemIndex++;
-            visitedElements++;
+            visitedItemsCount++;
 
             while (lists[currentListIndex] == null || lists[currentListIndex].isEmpty()) {
                 currentListIndex++;
@@ -79,7 +79,7 @@ public class HashTable<E> implements Collection<E> {
 
             E item = lists[currentListIndex].get(currentItemIndex);
 
-            if (currentItemIndex == lists[currentListIndex].size() - 1 && hasNext()) {
+            if (currentItemIndex == lists[currentListIndex].size() - 1) {
                 currentListIndex++;
                 currentItemIndex = -1;
             }
@@ -109,15 +109,15 @@ public class HashTable<E> implements Collection<E> {
 
     @Override
     public <T> T[] toArray(T[] array) {
-        if (array.length < lists.length) {
+        if (array.length < size) {
             //noinspection unchecked
-            return (T[]) Arrays.copyOf(toArray(), lists.length, array.getClass());
+            return (T[]) Arrays.copyOf(toArray(), size, array.getClass());
         }
 
         //noinspection SuspiciousSystemArraycopy
         System.arraycopy(toArray(), 0, array, 0, size);
 
-        if (array.length > lists.length) {
+        if (array.length > size) {
             array[size] = null;
         }
 
@@ -164,8 +164,8 @@ public class HashTable<E> implements Collection<E> {
             throw new NullPointerException("Коллекция не может быть null.");
         }
 
-        for (Object list : collection) {
-            if (!contains(list)) {
+        for (Object item : collection) {
+            if (!contains(item)) {
                 return false;
             }
         }
@@ -203,9 +203,7 @@ public class HashTable<E> implements Collection<E> {
         boolean isChanged = false;
 
         for (Object item : collection) {
-            while (contains(item)) {
-                remove(item);
-
+            while (remove(item)) {
                 isChanged = true;
             }
         }
@@ -219,25 +217,23 @@ public class HashTable<E> implements Collection<E> {
             throw new NullPointerException("Коллекция не может быть null.");
         }
 
-        boolean isChanged = false;
         int newSize = 0;
 
         for (ArrayList<E> list : lists) {
             if (list != null) {
-                if (list.retainAll(collection)) {
-                    newSize += list.size();
-
-                    isChanged = true;
-                }
+                list.retainAll(collection);
+                newSize += list.size();
             }
         }
 
-        if (isChanged) {
+        if (newSize != size) {
             size = newSize;
             modCount++;
+
+            return true;
         }
 
-        return isChanged;
+        return false;
     }
 
     @Override
