@@ -32,7 +32,6 @@ public class View {
             frame = new JFrame("Temperature converter");
 
             frame.setSize(420, 300);
-            frame.setResizable(true);
             frame.setLocationRelativeTo(null);
             frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             frame.setLayout(new GridLayout(5, 2, 1, 0));
