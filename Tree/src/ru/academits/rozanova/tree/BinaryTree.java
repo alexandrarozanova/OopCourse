@@ -1,59 +1,74 @@
 package ru.academits.rozanova.tree;
 
 import java.util.ArrayDeque;
+import java.util.Comparator;
+import java.util.Deque;
 import java.util.Queue;
-import java.util.Stack;
 import java.util.function.Consumer;
 
-public class Tree<E extends Comparable<E>> {
-    private TreeNode<E> root;
+public class BinaryTree<E> {
+    private final Comparator<E> comparator;
+    private BinaryTreeNode<E> root;
     private int size;
 
-    public Tree() {
-        root = null;
+    public BinaryTree() {
+        comparator = null;
+    }
+
+    public BinaryTree(Comparator<E> comparator) {
+        this.comparator = comparator;
     }
 
     public int getSize() {
         return size;
     }
 
-    private int compare(E node1, E node2) {
-        return node1.compareTo(node2);
-    }
-
-    public void add(E node) {
-        if (node == null) {
-            throw new NullPointerException("Узел не может быть null.");
+    private int compare(E data1, E data2) {
+        if (comparator != null) {
+            return comparator.compare(data1, data2);
         }
 
+        if (data1 == null && data2 == null) {
+            return 0;
+        }
+
+        if (data1 == null) {
+            return -1;
+        }
+
+        if (data2 == null) {
+            return 1;
+        }
+
+        //noinspection unchecked
+        return ((Comparable<E>) data1).compareTo(data2);
+    }
+
+    public void add(E data) {
         if (root == null) {
-            root = new TreeNode<>(node);
+            root = new BinaryTreeNode<>(data);
             size++;
 
             return;
         }
 
-        TreeNode<E> currentNode = root;
+        BinaryTreeNode<E> currentNode = root;
 
         while (currentNode != null) {
-            int comparingResult = compare(node, currentNode.getData());
+            int comparingResult = compare(data, currentNode.getData());
 
             if (comparingResult < 0) {
                 if (currentNode.getLeft() == null) {
-                    currentNode.setLeft(new TreeNode<>(node));
-
+                    currentNode.setLeft(new BinaryTreeNode<>(data));
                     size++;
 
                     return;
                 }
 
                 currentNode = currentNode.getLeft();
-            }
-
-            if (comparingResult > 0) {
+            } else {
                 if (currentNode.getRight() == null) {
-                    currentNode.setRight(new TreeNode<>(node));
-
+                    currentNode.setRight(new BinaryTreeNode<>(data));
                     size++;
 
                     return;
@@ -61,26 +76,18 @@ public class Tree<E extends Comparable<E>> {
 
                 currentNode = currentNode.getRight();
             }
-
-            if (comparingResult == 0) {
-                return;
-            }
         }
     }
 
-    public boolean getItem(E node) {
+    public boolean contains(E data) {
         if (size == 0) {
             return false;
         }
 
-        if (node == null) {
-            throw new NullPointerException("Узел не может быть null.");
-        }
-
-        TreeNode<E> currentNode = root;
+        BinaryTreeNode<E> currentNode = root;
 
         while (currentNode != null) {
-            int comparingResult = compare(node, currentNode.getData());
+            int comparingResult = compare(data, currentNode.getData());
 
             if (comparingResult == 0) {
                 return true;
@@ -92,9 +99,7 @@ public class Tree<E extends Comparable<E>> {
                 }
 
                 currentNode = currentNode.getLeft();
-            }
-
-            if (comparingResult > 0) {
+            } else {
                 if (currentNode.getRight() == null) {
                     return false;
                 }
@@ -106,21 +111,17 @@ public class Tree<E extends Comparable<E>> {
         return false;
     }
 
-    public void remove(E node) {
-        if (node == null) {
-            throw new NullPointerException("Узел не может быть null.");
-        }
-
+    public boolean remove(E data) {
         if (size == 0) {
-            return;
+            return false;
         }
 
-        TreeNode<E> currentNodeParent = null;
-        TreeNode<E> currentNode = root;
+        BinaryTreeNode<E> currentNodeParent = null;
+        BinaryTreeNode<E> currentNode = root;
         boolean isLeftChild = false;
 
         while (true) {
-            int comparingResult = compare(node, currentNode.getData());
+            int comparingResult = compare(data, currentNode.getData());
 
             if (comparingResult == 0) {
                 break;
@@ -132,16 +133,14 @@ public class Tree<E extends Comparable<E>> {
                 currentNode = currentNode.getLeft();
 
                 isLeftChild = true;
-            }
-
-            if (comparingResult > 0) {
+            } else {
                 currentNode = currentNode.getRight();
 
                 isLeftChild = false;
             }
 
             if (currentNode == null) {
-                return;
+                return false;
             }
         }
 
@@ -156,17 +155,11 @@ public class Tree<E extends Comparable<E>> {
 
             size--;
 
-            return;
+            return true;
         }
 
         if ((currentNode.getLeft() == null || currentNode.getRight() == null)) {
-            TreeNode<E> nextNode;
-
-            if (currentNode.getLeft() != null) {
-                nextNode = currentNode.getLeft();
-            } else {
-                nextNode = currentNode.getRight();
-            }
+            BinaryTreeNode<E> nextNode = (currentNode.getLeft() != null) ? currentNode.getLeft() : currentNode.getRight();
 
             if (currentNodeParent == null) {
                 root = nextNode;
@@ -178,11 +171,11 @@ public class Tree<E extends Comparable<E>> {
 
             size--;
 
-            return;
+            return true;
         }
 
-        TreeNode<E> minLeftNode = currentNode.getRight();
-        TreeNode<E> minLeftNodeParent = null;
+        BinaryTreeNode<E> minLeftNode = currentNode.getRight();
+        BinaryTreeNode<E> minLeftNodeParent = null;
 
         while (minLeftNode.getLeft() != null) {
             minLeftNodeParent = minLeftNode;
@@ -190,11 +183,9 @@ public class Tree<E extends Comparable<E>> {
         }
 
         if (minLeftNodeParent != null) {
-            if (minLeftNode.getRight() != null) {
-                minLeftNodeParent.setLeft(minLeftNode.getRight());
-            } else {
-                minLeftNodeParent.setLeft(null);
-            }
+            minLeftNodeParent.setLeft(minLeftNode.getRight());
+        } else {
+            currentNode.setRight(minLeftNode.getRight());
         }
 
         minLeftNode.setRight(currentNode.getRight());
@@ -209,6 +200,8 @@ public class Tree<E extends Comparable<E>> {
         }
 
         size--;
+
+        return true;
     }
 
     public void traverseInWidth(Consumer<E> consumer) {
@@ -216,12 +209,12 @@ public class Tree<E extends Comparable<E>> {
             return;
         }
 
-        Queue<TreeNode<E>> queue = new ArrayDeque<>();
+        Queue<BinaryTreeNode<E>> queue = new ArrayDeque<>();
 
         queue.offer(root);
 
         while (!queue.isEmpty()) {
-            TreeNode<E> node = queue.poll();
+            BinaryTreeNode<E> node = queue.poll();
 
             consumer.accept(node.getData());
 
@@ -240,26 +233,26 @@ public class Tree<E extends Comparable<E>> {
             return;
         }
 
-        Stack<TreeNode<E>> stack = new Stack<>();
+        Deque<BinaryTreeNode<E>> stack = new ArrayDeque<>();
 
         stack.add(root);
 
         while (!stack.isEmpty()) {
-            TreeNode<E> node = stack.pop();
+            BinaryTreeNode<E> node = stack.removeLast();
 
             consumer.accept(node.getData());
 
             if (node.getRight() != null) {
-                stack.add(node.getRight());
+                stack.addLast(node.getRight());
             }
 
             if (node.getLeft() != null) {
-                stack.add(node.getLeft());
+                stack.addLast(node.getLeft());
             }
         }
     }
 
-    private void visit(TreeNode<E> node, Consumer<E> consumer) {
+    private void visit(BinaryTreeNode<E> node, Consumer<E> consumer) {
         if (node != null) {
             consumer.accept(node.getData());
 
